@@ -10,8 +10,6 @@ import * as speakeasy from 'speakeasy';
 import { ApiBearerAuth, DocumentBuilder, SwaggerModule, ApiTags } from '@nestjs/swagger';
 import { IsEmail, MinLength, IsString, IsNumber, IsEnum } from 'class-validator';
 
-// ========== Helper: Environment variable safety ==========
-
 function getEnv(key: string): string {
   const value = process.env[key];
   if (value == null) {
@@ -549,6 +547,25 @@ export class AdminProductController {
   }
 }
 
+// ========== NEW: Root Controller ==========
+@Controller()
+class AppController {
+  @Get()
+  getHello() {
+    return {
+      message: 'E-commerce API is running!',
+      timestamp: new Date().toISOString(),
+      endpoints: {
+        swagger: '/api',
+        auth: '/auth/register, /auth/login',
+        products: '/products',
+        cart: '/cart',
+        admin: '/admin/products'
+      }
+    };
+  }
+}
+
 // ========== AppModule ==========
 
 @Module({
@@ -569,6 +586,7 @@ export class AdminProductController {
     }),
   ],
   controllers: [
+    AppController, 
     AuthController,
     ProductController,
     CartController,
